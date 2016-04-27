@@ -10,8 +10,6 @@ public class ParticleController : MonoBehaviour {
 	public Vector3 segmentDir = new Vector3(1.0f, 0.0f, 0.0f);
 	public float startingAngle = 0.0f;
 	private Mesh m_Mesh;
-	private int[] m_Indices;
-	private Vector2[] m_UVs;
 	ParticleSystem mPrSystem;
 	ParticleSystem.Particle[] particles;
 	int mCurrCount = 0;

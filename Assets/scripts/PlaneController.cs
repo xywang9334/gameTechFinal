@@ -33,7 +33,6 @@ public class PlaneController : MonoBehaviour {
 				hasCollider = false;
 			}
 			else if(!LevelManager.Instance.isred && color == Color.blue) {
-				print ("delete blue");
 				MeshCollider collider = gameObject.GetComponent<MeshCollider>();
 				Destroy (collider);
 				hasCollider = false;
