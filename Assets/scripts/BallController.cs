@@ -54,8 +54,14 @@ public class BallController : MonoBehaviour {
 				material.SetColor("_Color", Color.red);
 				LevelManager.Instance.setColor(true);
 			}
-			mParticlesController.SetColor(material.color);
+			if (mParticlesController.isReadyToUse()) {
+				mParticlesController.SetColor(material.color);
+				Vector3 particlePos = position;
+				particlePos.y += 1.0f;
+//				mParticlesController.SetPosition(particlePos, 5);
+			}
 		}
+
 	}
 	
 	

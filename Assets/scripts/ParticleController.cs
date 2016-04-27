@@ -6,7 +6,7 @@ using System;
 [RequireComponent(typeof(ParticleSystem))]
 public class ParticleController : MonoBehaviour {
 
-	public Color color = Color.white;
+	public Color color = Color.red;
 	public Vector3 segmentDir = new Vector3(1.0f, 0.0f, 0.0f);
 	public float startingAngle = 0.0f;
 	private Mesh m_Mesh;
@@ -17,28 +17,46 @@ public class ParticleController : MonoBehaviour {
 	int mCurrCount = 0;
 	static int MaxValueToHide = 10000;
 
+	public float timeToDie = 5.0f;
+
 	private int mVertexCount = 0;
 
 
+	// Use this for initialization
 	void Awake () {
+		initializeParticleSystem();
+	}
+
+	void initializeParticleSystem() {
 		mPrSystem = GetComponent<ParticleSystem>();
+		mPrSystem.startColor = color;
+		mPrSystem.startSize = 3;
+		if (particles == null) {
+			particles = new ParticleSystem.Particle[mPrSystem.particleCount];
+			mPrSystem.GetParticles(particles);
+		}
+		for (int i = 0; i < mPrSystem.particleCount; i ++) {
+			particles[i].color = color;
+			particles[i].rotation = 90;
+		}
+		mPrSystem.SetParticles (particles, mPrSystem.particleCount);
 		mPrSystem.Play ();
 	}
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-
-	void LateUpdate() {
-		UpdateSegments ();
-	}
-
 	public void UpdateSegments () {
-		if (particles == null) {
-			return;
-		}
+		
+		mPrSystem.GetParticles(particles);
+		clearOldParticles();
 		mPrSystem.SetParticles (particles, mPrSystem.particleCount);
+	}
+
+	public void clearOldParticles() {
+		for (int i = 0; i < particles.Length; i ++) {
+			float timeAlive = particles[i].startLifetime - particles[i].lifetime;
+			if (timeAlive > timeToDie) {
+				particles[i].lifetime = -1;
+			}
+		}
 	}
 
 
@@ -46,54 +64,13 @@ public class ParticleController : MonoBehaviour {
 		return mPrSystem.particleCount > 0;
 	}
 
-	public void SetVertexCount (int aCount) {
-		if (particles == null) {
-			particles = new ParticleSystem.Particle[mPrSystem.particleCount];
-			mPrSystem.GetParticles(particles);
-		}
-		if (mCurrCount > aCount) {
-			for (int i = aCount; i < mPrSystem.particleCount; i ++) {
-				particles[i].position = new Vector3(0, MaxValueToHide, 0);
-			}
-		}
-		mCurrCount = aCount < mPrSystem.particleCount ? aCount : mPrSystem.particleCount;
-		if (aCount > mPrSystem.particleCount) {
-			Debug.LogError("vertex count > particle cache");
-		}
-	}
-
-
-	public void SetPosition(int aIndex, Vector3 aPosition) {
-		if (aIndex < 0 || aIndex >= mCurrCount) {
-			return;
-		}
-		particles [aIndex].position = aPosition;
-		if (aIndex > 0) {
-			Vector3 dir = (particles[aIndex].position - particles[aIndex - 1].position);
-			particles[aIndex].rotation = AngleAroundAxis(segmentDir, dir) + startingAngle;
-			if (aIndex == 1) {
-				dir = -(particles[0].position - particles[1].position);
-				particles[0].rotation = AngleAroundAxis(segmentDir, dir) + startingAngle;
-			}
-
-
-		}
-	}
-
 	public void SetColor(Color acolor) {
-		if (particles == null)
-			return;
-		for (int i = 0; i < mPrSystem.particleCount; i ++) {
+		for (int i = 0; i < particles.Length; i ++) {
 			particles [i].color = color;
 		}
-	}
-
-
-	public void SetScale(int aIndex, float scale) {
-		if (aIndex < 0 || aIndex > mCurrCount) {
-			return;
-		}
-		particles [aIndex].size = scale;
+		color = acolor;
+		mPrSystem.startColor = acolor;
+		mPrSystem.SetParticles (particles, mPrSystem.particleCount);
 	}
 
 	static float AngleAroundAxis(Vector3 dirA, Vector3 dirB) {
@@ -102,10 +79,11 @@ public class ParticleController : MonoBehaviour {
 		return res;
 	}
 
-
-	
 	// Update is called once per frame
-	void Update () {
-	
+	void LateUpdate () {
+		if (particles == null) {
+			initializeParticleSystem();
+		}
+		UpdateSegments ();
 	}
 }
