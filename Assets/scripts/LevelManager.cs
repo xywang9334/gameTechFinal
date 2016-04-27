@@ -8,6 +8,7 @@ public class LevelManager : Singleton<LevelManager> {
 	public float maxTime;
 	private Text timerLabel;
 	public bool isred = true;
+	public bool isTutorial;
 
 	// Use this for initialization
 	void Start () {
@@ -28,6 +29,8 @@ public class LevelManager : Singleton<LevelManager> {
 			TimeRemaining = maxTime;
 			print ("died");
 		}
+
+
 	}
 	
 	public float TimeRemaining 

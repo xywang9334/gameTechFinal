@@ -1,4 +1,4 @@
-﻿Shader "Custom/NewSurfaceShader" {
+﻿Shader "Custom/ballShader" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
@@ -18,15 +18,29 @@
 
 		sampler2D _MainTex;
 
-		struct Input {
+		struct vertexInput {
 			float2 uv_MainTex;
+			float4 vertex : POSITION;
+		};
+
+		struct vertexOutput {
+			float4 pos : POSITION;
 		};
 
 		half _Glossiness;
 		half _Metallic;
-		fixed4 _Color;
+		uniform fixed4 _Color;
 
-		void surf (Input IN, inout SurfaceOutputStandard o) {
+		vertexOutput vert(vertexInput v) {
+			vertexOutput output;
+			output.pos = mul(UNITY_MATRIX_MVP, v.verTex);
+			UNITY_MATRIX_MVP.xyzw;
+
+
+			return output;
+		}
+
+		void surf (vertexInput IN, inout SurfaceOutputStandard o) {
 			// Albedo comes from a texture tinted by color
 			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
 			o.Albedo = c.rgb;
@@ -37,5 +51,6 @@
 		}
 		ENDCG
 	} 
+	// if it doesn't work
 	FallBack "Diffuse"
 }
