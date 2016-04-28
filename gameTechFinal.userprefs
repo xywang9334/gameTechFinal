@@ -1,12 +1,14 @@
-﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/scripts/ParticleController.cs">
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Shader/BallShader.shader">
     <Files>
-      <File FileName="Assets/scripts/ParticleController.cs" Line="29" Column="46" />
+      <File FileName="Assets/scripts/ParticleController.cs" Line="1" Column="1" />
       <File FileName="Assets/scripts/WinCondition.cs" Line="1" Column="1" />
       <File FileName="Assets/scripts/PlaneController.cs" Line="1" Column="1" />
       <File FileName="Assets/scripts/Wall.cs" Line="1" Column="1" />
       <File FileName="Assets/scripts/BallController.cs" Line="1" Column="1" />
+      <File FileName="Assets/Shader/PlaneShader.shader" Line="1" Column="1" />
+      <File FileName="Assets/Shader/BallShader.shader" Line="12" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
