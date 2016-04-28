@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+//for button use
 public class LevelManagerForStart : MonoBehaviour {
 
 	// Use this for initialization

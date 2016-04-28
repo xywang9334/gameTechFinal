@@ -17,6 +17,7 @@ public class WinCondition : MonoBehaviour {
 	// More UI to add
 	void OnTriggerEnter(Collider collide) {
 		if (collide.CompareTag("ball")) {
+			LevelManager.Instance.isWin = true;
 			Application.LoadLevel ("win");
 		}
 	}
