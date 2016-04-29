@@ -7,17 +7,11 @@ using System;
 public class ParticleController : MonoBehaviour {
 
 	public Color color = Color.red;
-	public Vector3 segmentDir = new Vector3(1.0f, 0.0f, 0.0f);
-	public float startingAngle = 0.0f;
-	private Mesh m_Mesh;
 	ParticleSystem mPrSystem;
 	ParticleSystem.Particle[] particles;
-	int mCurrCount = 0;
-	static int MaxValueToHide = 10000;
 
 	public float timeToDie = 5.0f;
 
-	private int mVertexCount = 0;
 
 
 	// Use this for initialization
@@ -33,10 +27,7 @@ public class ParticleController : MonoBehaviour {
 			particles = new ParticleSystem.Particle[mPrSystem.particleCount];
 			mPrSystem.GetParticles(particles);
 		}
-		for (int i = 0; i < mPrSystem.particleCount; i ++) {
-			particles[i].color = color;
-			particles[i].rotation = 90;
-		}
+		mPrSystem.startColor = color;
 		mPrSystem.SetParticles (particles, mPrSystem.particleCount);
 		mPrSystem.Play ();
 	}
@@ -63,9 +54,6 @@ public class ParticleController : MonoBehaviour {
 	}
 
 	public void SetColor(Color acolor) {
-		for (int i = 0; i < particles.Length; i ++) {
-			particles [i].color = color;
-		}
 		color = acolor;
 		mPrSystem.startColor = acolor;
 		mPrSystem.SetParticles (particles, mPrSystem.particleCount);

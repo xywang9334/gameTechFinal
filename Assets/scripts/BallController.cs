@@ -12,7 +12,7 @@ public class BallController : MonoBehaviour {
 	private Material material;
 	private GameObject arrowUI;
 	private GameObject spaceUI;
-	bool hasCollider = true;
+//	bool hasCollider = true;
 	private bool arrowUIdone = false;
 	private bool spaceUIdone = false;
 	ParticleController mParticlesController = null;
@@ -167,7 +167,7 @@ public class BallController : MonoBehaviour {
 					yield return null;
 				}
 				yield break;
-				spaceUI.SetActive (false);
+//				spaceUI.SetActive (false);
 			}
 		}
 	}

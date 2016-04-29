@@ -5,7 +5,7 @@ public class PlaneController : MonoBehaviour {
 
 	private float TimeToDisappear = 1.0f;
 	private float TimeToAppear = 1.0f;
-	private bool state = true; // it appears
+//	private bool state = true; // it appears
 	private Material material;
 	private bool hasCollider = true;
 	

@@ -29,7 +29,6 @@ public class LevelManager : Singleton<LevelManager> {
 		{
 			Application.LoadLevel(Application.loadedLevel);
 			TimeRemaining = maxTime;
-			print ("died");
 		}
 
 

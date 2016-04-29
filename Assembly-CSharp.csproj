@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{E7C72C58-F4BA-1C96-27E5-F543E5E26B56}</ProjectGuid>
+    <ProjectGuid>{8E16A347-9B50-29D6-D5A4-10AA44CDBD1C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -49,8 +49,6 @@
      <Compile Include="Assets\scripts\FailCondition.cs" />
      <Compile Include="Assets\scripts\FollowBall.cs" />
      <Compile Include="Assets\scripts\LevelManager.cs" />
-     <Compile Include="Assets\scripts\LevelManagerForStart.cs" />
-     <Compile Include="Assets\scripts\LevelManager_Levels.cs" />
      <Compile Include="Assets\scripts\ParticleController.cs" />
      <Compile Include="Assets\scripts\PlaneController.cs" />
      <Compile Include="Assets\scripts\ResultCheck.cs" />
