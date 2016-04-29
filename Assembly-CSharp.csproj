@@ -46,12 +46,14 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\scripts\BallController.cs" />
+     <Compile Include="Assets\scripts\FailCondition.cs" />
      <Compile Include="Assets\scripts\FollowBall.cs" />
      <Compile Include="Assets\scripts\LevelManager.cs" />
      <Compile Include="Assets\scripts\LevelManagerForStart.cs" />
      <Compile Include="Assets\scripts\LevelManager_Levels.cs" />
      <Compile Include="Assets\scripts\ParticleController.cs" />
      <Compile Include="Assets\scripts\PlaneController.cs" />
+     <Compile Include="Assets\scripts\ResultCheck.cs" />
      <Compile Include="Assets\scripts\RotationScript.cs" />
      <Compile Include="Assets\scripts\Singleton.cs" />
      <Compile Include="Assets\scripts\UpdateUI.cs" />

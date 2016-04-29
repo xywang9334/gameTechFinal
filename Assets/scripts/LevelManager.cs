@@ -6,7 +6,9 @@ public class LevelManager : Singleton<LevelManager> {
 
 	private float _timeRemaining;
 	public float maxTime;
+	public int levelNum = 0;
 	private Text timerLabel;
+	public bool isWin = false;
 	public bool isred = true;
 	public bool isTutorial;
 
