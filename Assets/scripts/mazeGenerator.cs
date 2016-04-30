@@ -9,16 +9,20 @@ public class mazeGenerator : MonoBehaviour {
 
 	public GameObject wall;
 	public GameObject sphere;
+	public GameObject camera;
 
 	private Vector3 ballPos;
+	private Vector3 cameraPos;
 
 	private static int coefficient = -1;
 
 	void Start() {
 		ballPos = new Vector3 (0.0f, 0.0f, 0.0f);
+		cameraPos = new Vector3 (0.0f, 0.0f, -10.0f);
 		maze = new int[mazeWidth, mazeHeight];
 		GameObject sphereBall = Instantiate (sphere, ballPos, Quaternion.identity) as GameObject;
-		createMaze (1);
+		GameObject mainCamera = Instantiate (camera, cameraPos, Quaternion.identity) as GameObject;
+		createMaze (difficulty);
 	}
 
 	private void createFramework() {
