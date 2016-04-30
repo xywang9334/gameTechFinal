@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : Singleton<LevelManager> {
 
@@ -27,7 +28,7 @@ public class LevelManager : Singleton<LevelManager> {
 		
 		if (TimeRemaining <= 0)
 		{
-			Application.LoadLevel(Application.loadedLevel);
+			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); 
 			TimeRemaining = maxTime;
 		}
 
@@ -42,7 +43,7 @@ public class LevelManager : Singleton<LevelManager> {
 	
 	
 	public void LoadLevel(string name){
-		Application.LoadLevel (name);
+		SceneManager.LoadScene (name);
 		TimeRemaining = maxTime;
 	}
 	

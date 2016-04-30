@@ -17,7 +17,7 @@ public class FailCondition : MonoBehaviour {
 	void OnTriggerEnter(Collider collide) {
 		if (collide.CompareTag("ball")) {
 			LevelManager.Instance.isWin = false;
-			Application.LoadLevel ("win");
+			LevelManager.Instance.LoadLevel ("win");
 		}
 	}
 }
