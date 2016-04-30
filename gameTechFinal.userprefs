@@ -1,13 +1,17 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/scripts/LevelManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/scripts/FollowBall.cs">
     <Files>
       <File FileName="Assets/scripts/ParticleController.cs" Line="70" Column="21" />
-      <File FileName="Assets/scripts/LevelManager.cs" Line="32" Column="1" />
+      <File FileName="Assets/scripts/mazeGenerator.cs" Line="25" Column="46" />
+      <File FileName="Assets/scripts/LevelManager.cs" Line="13" Column="25" />
+      <File FileName="Assets/scripts/FollowBall.cs" Line="22" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/Users/xinyi/Documents/gameTechFinal/Assets/scripts/mazeGenerator.cs" line="15" column="1" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>
