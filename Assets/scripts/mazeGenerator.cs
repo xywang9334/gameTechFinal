@@ -28,6 +28,8 @@ public class mazeGenerator : MonoBehaviour {
 		{
 			if (value.x < 1 || value.x >= this.mazeWidth - 1 || value.y < 1 || value.y >= this.mazeHeight - 1)
 			{
+				print (value.x);
+				print (value.y);
 				throw new ArgumentException("CurrentTile must be within the one tile border all around the maze");
 			}
 			if (value.x % 2 == 1 || value.y % 2 == 1)
@@ -77,6 +79,12 @@ public class mazeGenerator : MonoBehaviour {
 		CurrentTile = Vector2.one;
 		stack.Push (CurrentTile);
 		maze = fillTwoDimensionArray ();
+		for (int i = 0; i < mazeWidth; i++) {
+			for (int j = 0; j < mazeHeight; j++) {
+				print (maze [i, j]);
+			}
+			print ("\n");
+		}
 	}
 
 
@@ -84,7 +92,16 @@ public class mazeGenerator : MonoBehaviour {
 		List<Vector2> neighbours;
 		while (stack.Count > 0) {
 			maze [(int)CurrentTile.x, (int)CurrentTile.y] = 0;
-			getValidNeighbour (CurrentTile);
+			neighbours = getValidNeighbour (CurrentTile);
+			if (neighbours.Count > 0) {
+				stack.Push (CurrentTile);
+				int next = rnd.Next (neighbours.Count);
+				print (neighbours [next]);
+				CurrentTile = neighbours [next];
+			} else {
+				CurrentTile = stack.Pop ();
+			}
+
 		}
 		return maze;
 	}
@@ -93,9 +110,27 @@ public class mazeGenerator : MonoBehaviour {
 		foreach (var offset in offsets) {
 			Vector2 tileToCheck = new Vector2 (tile.x + offset.x, tile.y + offset.y);
 			if ((tileToCheck.x % 2 == 1) || (tileToCheck.y % 2 == 1)) {
-				
+				if (maze [(int)tileToCheck.x, (int)tileToCheck.y] == 1 && HasThreeWalls (tileToCheck)) {
+					validNeighbors.Add (tileToCheck);
+				}
 			}
 		}
 		return validNeighbors;
+	}
+
+
+	private bool HasThreeWalls(Vector2 VectorToCheck) {
+		int wallCount = 0;
+		foreach (var offset in offsets) {
+			Vector2 toCheck = new Vector2 (VectorToCheck.x + offset.x, VectorToCheck.y + offset.y);
+			if (insideMaze (toCheck) && maze[(int)toCheck.x, (int)toCheck.y] == 1) {
+				wallCount++;
+			}
+		}
+		return wallCount == 3;
+	}
+
+	private bool insideMaze(Vector2 p) {
+		return p.x >= 0 && p.y >= 0 && p.x < mazeHeight && p.y < mazeWidth;
 	}
 }
