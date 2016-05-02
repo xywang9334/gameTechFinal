@@ -17,7 +17,7 @@ public class BallController : MonoBehaviour {
 	private bool spaceUIdone = false;
 	ParticleController mParticlesController = null;
 	void Start () {
-		if (LevelManager.Instance.levelNum == 0) {
+		if (LevelManager.Instance.levelNum == 0 && arrowUI != null && spaceUI != null) {
 			arrowUI = GameObject.Find ("ArrowKeys");
 			spaceUI = GameObject.Find ("SpaceKey");
 			spaceUI.SetActive (false);
