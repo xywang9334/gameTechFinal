@@ -15,6 +15,7 @@ public class mazeGenerator : MonoBehaviour {
 	public GameObject blueBrick;
 
 	private Vector3 ballPos;
+	public GameObject parent;
 	private Vector3 cameraPos;
 	private static int coefficient = -1;
 	private static List<Vector2> offsets = new List<Vector2> { new Vector2(0, 1), new Vector2(0, -1), new Vector2(1, 0), new Vector2(-1, 0) };
@@ -43,10 +44,11 @@ public class mazeGenerator : MonoBehaviour {
 
 	void Start() {
 		ballPos = new Vector3 (mazeWidth / 2.0f - 1.0f, mazeHeight / 2.0f - 1.0f, 0.0f);
-		cameraPos = new Vector3 (0.0f, 0.0f, -10.0f);
+		cameraPos = new Vector3 (0.0f, 0.0f, -30.0f);
 		maze = new int[mazeWidth, mazeHeight];
 		GameObject sphereBall = Instantiate (sphere, ballPos, Quaternion.identity) as GameObject;
 		Instantiate (mCamera, cameraPos, Quaternion.identity);
+		RenderSettings.skybox = (Material)Resources.Load("CloudyCrown_Midday");
 		FollowBall followBall = GameObject.FindObjectOfType<FollowBall> ();
 		followBall.ball = sphereBall;
 		createMaze (difficulty);
@@ -58,16 +60,23 @@ public class mazeGenerator : MonoBehaviour {
 		Vector3 scaleVerticle = new Vector3 (mazeHeight + 2.0f, 1.0f, 1.1f);
 		GameObject wallUp = Instantiate(wall, pos, Quaternion.identity) as GameObject;
 		wallUp.transform.localScale = scale;
+		// attach to another object
+		wallUp.transform.parent = parent.transform;
 		pos.y *= coefficient;
 		GameObject wallDown = Instantiate (wall, pos, Quaternion.identity) as GameObject;
 		wallDown.transform.localScale = scale;
+		// attach to another object
+		wallDown.transform.parent = parent.transform;
 		GameObject wallRight = Instantiate (wall, new Vector3 (0, 0, 0), 
 			Quaternion.AngleAxis (90, new Vector3 (0, 0, 1))) as GameObject;
 		wallRight.transform.localScale = scaleVerticle;
+		wallRight.transform.parent = parent.transform;
 		GameObject wallLeft = Instantiate(wall, new Vector3(mazeWidth, 0, 0), 
 			Quaternion.AngleAxis (90, new Vector3 (0, 0, 1))) as GameObject;
 		wallLeft.transform.localScale = scaleVerticle;
-		Instantiate (winObject, new Vector3 (1.5f, -mazeHeight / 2.0f + 1.5f, 0.0f), Quaternion.identity);
+		wallLeft.transform.parent = parent.transform;
+		GameObject win = Instantiate (winObject, new Vector3 (1.5f, -mazeHeight / 2.0f + 1.5f, 0.0f), Quaternion.identity) as GameObject;
+		win.transform.parent = parent.transform;
 	}
 
 	enum nextToGenerate {WALL, RED, BLUE};
@@ -81,7 +90,7 @@ public class mazeGenerator : MonoBehaviour {
 		CurrentTile = Vector2.one;
 		stack.Push (CurrentTile);
 		maze = fillTwoDimensionArray ();
-		Vector3 scale = new Vector3 (1.0f, 0.5f, 1.0f);
+		Vector3 scale = new Vector3 (1.0f, 1.0f, 1.0f);
 		// maximum number of bricks in the maze
 		int maximumBlackWallNumber = difficulty * 15;
 		int count = 0;
@@ -94,16 +103,18 @@ public class mazeGenerator : MonoBehaviour {
 						continue;
 					}
 					nextToGenerate n = findNextToGenerate(count, maximumBlackWallNumber);
-					if (n == nextToGenerate.WALL && count < maximumBlackWallNumber) {
+					if (n == nextToGenerate.WALL) {
 						GameObject blackWall = Instantiate (wall, pos, Quaternion.identity) as GameObject;
 						blackWall.transform.localScale = scale;
-						count++;
+						blackWall.transform.parent = parent.transform;
 					} else if (n == nextToGenerate.RED) {
 						GameObject redWall = Instantiate (redBrick, pos, Quaternion.identity) as GameObject;
 						redWall.transform.localScale = scale;
+						redWall.transform.parent = parent.transform;
 					} else {
 						GameObject blueWall = Instantiate (blueBrick, pos, Quaternion.identity) as GameObject;
 						blueWall.transform.localScale = scale;
+						blueWall.transform.parent = parent.transform;
 					}
 				}
 			}

@@ -10,8 +10,8 @@ public class BallController : MonoBehaviour {
 	public Text text;
 	private int doubleJump = 1;
 	private Material material;
-	private GameObject arrowUI;
-	private GameObject spaceUI;
+	public GameObject arrowUI;
+	public GameObject spaceUI;
 //	bool hasCollider = true;
 	private bool arrowUIdone = false;
 	private bool spaceUIdone = false;
@@ -40,7 +40,7 @@ public class BallController : MonoBehaviour {
 		if (Input.GetKey(KeyCode.LeftArrow)) {
 			rb.AddForce(Vector3.left/20, ForceMode.Impulse);
 			position.x -= 0.08f;
-			if (LevelManager.Instance.levelNum == 0 && !arrowUIdone) {
+			if (arrowUI != null && spaceUI != null && LevelManager.Instance.levelNum == 0 && !arrowUIdone) {
 				arrowUIdone = true;
 				StartCoroutine (UICoroutine(0));
 
@@ -50,7 +50,7 @@ public class BallController : MonoBehaviour {
 		if (Input.GetKey(KeyCode.RightArrow)) {
 			rb.AddForce(Vector3.right/20, ForceMode.Impulse);
 			position.x += 0.08f;
-			if (LevelManager.Instance.levelNum == 0 && !arrowUIdone) {
+			if (arrowUI != null && spaceUI != null && LevelManager.Instance.levelNum == 0 && !arrowUIdone) {
 				arrowUIdone = true;
 				StartCoroutine (UICoroutine(0));
 			}
@@ -62,7 +62,7 @@ public class BallController : MonoBehaviour {
 				doubleJump++;
 				rb.AddForce(Vector3.up * 14, ForceMode.Impulse);
 			}
-			if (LevelManager.Instance.levelNum == 0&& !arrowUIdone) {
+			if (arrowUI != null && spaceUI != null && LevelManager.Instance.levelNum == 0&& !arrowUIdone) {
 				arrowUIdone = true;
 				StartCoroutine (UICoroutine(0));
 			}
@@ -70,7 +70,7 @@ public class BallController : MonoBehaviour {
 		}
 		if (Input.GetKeyDown(KeyCode.Space)) {
 			//spaceUIdone = true;
-			if (LevelManager.Instance.levelNum == 0) {
+			if (arrowUI != null && spaceUI != null && LevelManager.Instance.levelNum == 0) {
 				if (arrowUIdone && !spaceUIdone) {
 					spaceUIdone = true;
 					StartCoroutine (UICoroutine(1));
@@ -122,6 +122,9 @@ public class BallController : MonoBehaviour {
 
 
 	IEnumerator UICoroutine(int i){
+		if (arrowUI == null || spaceUI == null) {
+			yield return null;
+		}
 		if(i == 0){
 			yield return new WaitForSeconds (1f);
 			text = GameObject.Find ("ArrowText").GetComponent<Text>();
