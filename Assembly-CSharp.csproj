@@ -55,6 +55,7 @@
      <Compile Include="Assets\scripts\LevelManager.cs" />
      <Compile Include="Assets\scripts\ParticleController.cs" />
      <Compile Include="Assets\scripts\PlaneController.cs" />
+     <Compile Include="Assets\scripts\ReplayButton.cs" />
      <Compile Include="Assets\scripts\ResultCheck.cs" />
      <Compile Include="Assets\scripts\RotationScript.cs" />
      <Compile Include="Assets\scripts\Singleton.cs" />

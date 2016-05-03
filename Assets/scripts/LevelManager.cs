@@ -12,10 +12,12 @@ public class LevelManager : Singleton<LevelManager> {
 	public bool isWin = false;
 	public bool isred = true;
 	public bool isTutorial;
+	private string currentSceneName;
 
 	// Use this for initialization
 	void Start () {
 		TimeRemaining = maxTime;
+		currentSceneName = SceneManager.GetActiveScene ().name;
 	}
 	
 	public void setColor(bool value) {
@@ -28,11 +30,16 @@ public class LevelManager : Singleton<LevelManager> {
 		
 		if (TimeRemaining <= 0)
 		{
-			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); 
+			currentSceneName = SceneManager.GetActiveScene ().name;
+			SceneManager.LoadScene("Lose"); 
 			TimeRemaining = maxTime;
 		}
 
 
+	}
+
+	public void loadLastLevel() {
+		SceneManager.LoadScene (currentSceneName);
 	}
 	
 	public float TimeRemaining 

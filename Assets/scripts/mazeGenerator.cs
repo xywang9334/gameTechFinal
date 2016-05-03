@@ -134,13 +134,11 @@ public class mazeGenerator : MonoBehaviour {
 	Vector3 findMiddleAvailablePoint(int [,]maze) {
 		int i = (int)mazeWidth / 2; int j = (int)mazeHeight / 2;
 		while (i >= 0 && i < mazeWidth && j >= 0 && j < mazeHeight) {
-			foreach (var offset in offsets) {
-				if (maze [i, j] == 0) {
-					return new Vector3 (i, j - mazeHeight / 2.0f + 1.0f, 0);
-				} else {
-					i += (int)offset.x;
-					j += (int)offset.y;
-				}
+			if (maze [i, j] == 0) {
+				return new Vector3 (i, j - mazeHeight / 2.0f + 1.0f, 0);
+			} else {
+				i += 1;
+				j += 1;
 			}
 		}
 		return new Vector2 (0.0f, 0.0f);
