@@ -22,6 +22,7 @@ public class mazeGenerator : MonoBehaviour {
 	private System.Random rnd = new System.Random();
 	private Stack<Vector2> stack = new Stack<Vector2>();
 	public GameObject winObject;
+	private GameObject sphereBall;
 
 	private Vector2 _currentTile;
 	public Vector2 CurrentTile
@@ -43,10 +44,10 @@ public class mazeGenerator : MonoBehaviour {
 	}
 
 	void Start() {
-		ballPos = new Vector3 (mazeWidth / 2.0f - 1.0f, mazeHeight / 2.0f - 1.0f, 0.0f);
+//		ballPos = new Vector3 (mazeWidth / 2.0f - 1.0f, mazeHeight / 2.0f - 1.0f, 0.0f);
 		cameraPos = new Vector3 (0.0f, 0.0f, -30.0f);
 		maze = new int[mazeWidth, mazeHeight];
-		GameObject sphereBall = Instantiate (sphere, ballPos, Quaternion.identity) as GameObject;
+		sphereBall = Instantiate (sphere, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity) as GameObject;
 		Instantiate (mCamera, cameraPos, Quaternion.identity);
 		RenderSettings.skybox = (Material)Resources.Load("CloudyCrown_Midday");
 		FollowBall followBall = GameObject.FindObjectOfType<FollowBall> ();
@@ -75,8 +76,7 @@ public class mazeGenerator : MonoBehaviour {
 			Quaternion.AngleAxis (90, new Vector3 (0, 0, 1))) as GameObject;
 		wallLeft.transform.localScale = scaleVerticle;
 		wallLeft.transform.parent = parent.transform;
-		GameObject win = Instantiate (winObject, new Vector3 (1.5f, -mazeHeight / 2.0f + 1.5f, 0.0f), Quaternion.identity) as GameObject;
-		win.transform.parent = parent.transform;
+
 	}
 
 	enum nextToGenerate {WALL, RED, BLUE};
@@ -93,16 +93,17 @@ public class mazeGenerator : MonoBehaviour {
 		Vector3 scale = new Vector3 (1.0f, 1.0f, 1.0f);
 		// maximum number of bricks in the maze
 		int maximumBlackWallNumber = difficulty * 15;
+		Vector3 position = new Vector3 (mazeWidth, mazeHeight, 0);
 		int count = 0;
 		for (int i = 0; i < mazeWidth; i++) {
 			for (int j = 0; j < mazeHeight; j++) {
+				Vector3 pos = new Vector3 (i, j - mazeHeight / 2.0f + 1.0f, 0);
 				if (maze [i, j] == 1) {
 					bool boundary = checkBoundary (i, j);
-					Vector3 pos = new Vector3 (i, j - mazeHeight / 2.0f + 1.0f, 0);
 					if (boundary) {
 						continue;
 					}
-					nextToGenerate n = findNextToGenerate(count, maximumBlackWallNumber);
+					nextToGenerate n = findNextToGenerate (count, maximumBlackWallNumber);
 					if (n == nextToGenerate.WALL) {
 						GameObject blackWall = Instantiate (wall, pos, Quaternion.identity) as GameObject;
 						blackWall.transform.localScale = scale;
@@ -116,9 +117,33 @@ public class mazeGenerator : MonoBehaviour {
 						blueWall.transform.localScale = scale;
 						blueWall.transform.parent = parent.transform;
 					}
+				} else {
+					if (pos.y < position.y) {
+						position = pos;
+					}
 				}
 			}
 		}
+		sphereBall.transform.position = position;
+		position = findMiddleAvailablePoint (maze);
+		GameObject win = Instantiate (winObject, position, Quaternion.identity) as GameObject;
+		win.transform.parent = parent.transform;
+	}
+
+
+	Vector3 findMiddleAvailablePoint(int [,]maze) {
+		int i = (int)mazeWidth / 2; int j = (int)mazeHeight / 2;
+		while (i >= 0 && i < mazeWidth && j >= 0 && j < mazeHeight) {
+			foreach (var offset in offsets) {
+				if (maze [i, j] == 0) {
+					return new Vector3 (i, j - mazeHeight / 2.0f + 1.0f, 0);
+				} else {
+					i += (int)offset.x;
+					j += (int)offset.y;
+				}
+			}
+		}
+		return new Vector2 (0.0f, 0.0f);
 	}
 
 
