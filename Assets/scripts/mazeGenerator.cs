@@ -23,6 +23,7 @@ public class mazeGenerator : MonoBehaviour {
 	private Stack<Vector2> stack = new Stack<Vector2>();
 	public GameObject winObject;
 	private GameObject sphereBall;
+	private GameObject win;
 
 	private Vector2 _currentTile;
 	public Vector2 CurrentTile
@@ -126,7 +127,7 @@ public class mazeGenerator : MonoBehaviour {
 		}
 		sphereBall.transform.position = position;
 		position = findMiddleAvailablePoint (maze);
-		GameObject win = Instantiate (winObject, position, Quaternion.identity) as GameObject;
+		win = Instantiate (winObject, position, Quaternion.identity) as GameObject;
 		win.transform.parent = parent.transform;
 	}
 
@@ -207,5 +208,17 @@ public class mazeGenerator : MonoBehaviour {
 
 	private bool insideMaze(Vector2 p) {
 		return p.x >= 0 && p.y >= 0 && p.x < mazeHeight && p.y < mazeWidth;
+	}
+
+	private bool search(Vector2 current) {
+		return false;
+	}
+
+
+	public void puzzleSolver() {
+		Vector2 start = sphereBall.transform.position;
+		Vector2 end = win.transform.position;
+		List<Vector2> path = new List<Vector2> ();
+
 	}
 }
