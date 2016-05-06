@@ -26,6 +26,23 @@ public class mazeGenerator : MonoBehaviour {
 	private GameObject win;
 
 	private Vector2 _currentTile;
+
+	enum state {PASSED, UNPASSED, UNTESTED};
+
+	struct node {
+		public double pathLengthToNode;
+		public double straightLineDistance;
+		public state passed;
+		public Vector2 position;
+		public Vector2 previous;
+		public bool previousAssigned;
+		public double estimatedDistance {
+			get { return straightLineDistance + pathLengthToNode; }
+		}
+	};
+
+
+	private node[,] mazeSolver;
 	public Vector2 CurrentTile
 	{
 		get { return _currentTile; }
@@ -210,15 +227,107 @@ public class mazeGenerator : MonoBehaviour {
 		return p.x >= 0 && p.y >= 0 && p.x < mazeHeight && p.y < mazeWidth;
 	}
 
-	private bool search(Vector2 current) {
+
+	private List<Vector2> getAdjacent (Vector2 nodes) {
+		List<Vector2> values = new List<Vector2> ();
+		foreach (var offset in offsets) {
+			Vector2 temp = new Vector2 (nodes.x + offset.x, nodes.y + offset.y);
+			if (insideMaze (temp)) {
+				values.Add (temp);
+			}
+		}
+		return values;
+	}
+
+
+	private List<node> getAdjacentWalkableNodes (Vector2 nodes) {
+		List<node> node = new List<node>();
+		List<Vector2> adjacent = getAdjacent (nodes);
+		foreach (var location in adjacent) {
+			int x = (int)location.x;
+			int y = (int)location.y;
+			node n = mazeSolver [x, y];
+			Vector2 parent = n.previous;
+			node parentNode = mazeSolver [(int)parent.x, (int)parent.y];
+			if (maze [x, y] == 1) {
+				continue;
+			}
+			if (n.passed == state.PASSED) {
+				continue;
+			} else if (n.passed == state.UNPASSED) {
+				double distance = getDistance (location, parent);
+				double temp = n.straightLineDistance + distance;
+				if (temp < n.straightLineDistance) {
+					n.previous = nodes;
+					n.straightLineDistance = parentNode.straightLineDistance + getDistance (n.position, n.previous);
+					n.previousAssigned = true;
+					node.Add (n);
+				}
+			} else {
+				n.previous = nodes;
+				n.straightLineDistance = parentNode.straightLineDistance + getDistance (n.position, n.previous);
+				n.passed = state.UNPASSED;
+				n.previousAssigned = true;
+				node.Add (n);
+			}
+
+		}
+			
+		return node;
+	}
+
+
+
+	private bool search(Vector2 current, Vector2 end) {
+		mazeSolver [(int)current.x, (int)current.y].passed = state.PASSED;
+		List<node> nodes = getAdjacentWalkableNodes (current);
+		nodes.Sort((node1, node2) => node1.estimatedDistance.CompareTo(node2.estimatedDistance));
+		foreach (var node in nodes) {
+			if (node.position == end) {
+				return true;
+			} else {
+				if (search (node.position, end)) {
+					return true;
+				}
+			}
+		}
 		return false;
 	}
 
 
+	private double getDistance(Vector2 a, Vector2 b) {
+		return Math.Sqrt(Math.Pow(a.x - b.x, 2) + Math.Pow(a.y - b.y, 2));
+	}
+
+
+	private void initializeMazeSolver (int i, int j, Vector2 start, Vector2 end) {
+		mazeSolver [i, j].position = new Vector2 (i, j);
+		// start to here
+		mazeSolver [i, j].straightLineDistance = 0.0;
+		// end to here
+		mazeSolver [i, j].pathLengthToNode = getDistance (mazeSolver[i, j].position, end);
+		mazeSolver [i, j].passed = state.UNTESTED;
+		mazeSolver [i, j].previousAssigned = false;
+	}
+
 	public void puzzleSolver() {
 		Vector2 start = sphereBall.transform.position;
 		Vector2 end = win.transform.position;
-		List<Vector2> path = new List<Vector2> ();
-
+		mazeSolver = new node[mazeWidth, mazeHeight];
+		for (int i = 0; i < mazeWidth; i++) {
+			for (int j = 0; j < mazeHeight; j++)
+				initializeMazeSolver (i, j, start, end);
+		}
+		mazeSolver [(int)start.x, (int)start.y].passed = state.PASSED;
+		bool success = search (start, end);
+		if (success) {
+			List<Vector2> path = new List<Vector2> ();
+			node n = mazeSolver [(int)end.x, (int)end.y];
+			while (n.previousAssigned) {
+				path.Add (n.position);
+				n = mazeSolver [(int)n.position.x, (int)n.position.y];
+			}
+			path.Reverse ();
+		}
 	}
 }
