@@ -62,6 +62,7 @@
      <Compile Include="Assets\scripts\UpdateUI.cs" />
      <Compile Include="Assets\scripts\WinCondition.cs" />
      <Compile Include="Assets\scripts\mazeGenerator.cs" />
+     <Compile Include="Assets\scripts\showHint.cs" />
      <Compile Include="Assets\scripts\startButton.cs" />
      <None Include="Assets\Shader\BallShader.shader" />
      <None Include="Assets\Shader\PlaneShader.shader" />
