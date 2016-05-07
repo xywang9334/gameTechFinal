@@ -28,8 +28,10 @@ public class mazeGenerator : MonoBehaviour {
 	Vector2 end;
 
 	private Vector2 _currentTile;
+	public GameObject currentLineRenderer;
 
 	enum state {PASSED, UNPASSED, UNTESTED};
+	enum nextToGenerate {WALL, RED, BLUE};
 
 	struct node {
 		public double pathLengthToNode;
@@ -99,7 +101,7 @@ public class mazeGenerator : MonoBehaviour {
 
 	}
 
-	enum nextToGenerate {WALL, RED, BLUE};
+
 	private void createMaze(int difficulty) {
 		createFramework ();
 		for (int i = 0; i < mazeWidth; i++) {
@@ -317,12 +319,30 @@ public class mazeGenerator : MonoBehaviour {
 		mazeSolver [i, j].previousAssigned = false;
 	}
 
-	public void puzzleSolver() {
+
+	private void setStartPosition () {
+		Vector3 position = sphereBall.transform.position;
+		Vector2 p = new Vector2 (position.x, position.y - 1.0f + mazeHeight / 2.0f);
+		List<Vector2> ls = new List<Vector2> (offsets);
+		ls.Insert (0, new Vector2 (0.0f, 0.0f));
+		foreach (var offset in ls) {
+			Vector2 temp = new Vector2 ((int)(p.x + offset.x), (int)(p.y + offset.y));
+			print (temp);
+			if (insideMaze (temp) && maze [(int)temp.x, (int)temp.y] == 0) {
+				start.x = temp.x;
+				start.y = temp.y;
+				break;
+			}
+		}
+	}
+
+	public void puzzleSolver () {
 		mazeSolver = new node[mazeWidth, mazeHeight];
 		for (int i = 0; i < mazeWidth; i++) {
 			for (int j = 0; j < mazeHeight; j++)
 				initializeMazeSolver (i, j);
 		}
+		setStartPosition ();
 		mazeSolver [(int)start.x, (int)start.y].passed = state.PASSED;
 		bool success = search (start);
 		List<Vector2> path = new List<Vector2> ();
@@ -338,13 +358,15 @@ public class mazeGenerator : MonoBehaviour {
 			}
 			path.Reverse ();
 		}
+
 		int length = path.Count;
 		for (int i = 0; i < length - 1; i ++) {
-			GL.Begin (GL.LINES);
-			GL.Color (Color.black);
-			GL.Vertex3 (path[i].x, path[i].y - mazeHeight / 2.0f + 1.0f, 0.0f);
-			GL.Vertex3 (path[i + 1].x, path[i + 1].y - mazeHeight / 2.0f + 1.0f, 0.0f);
-			GL.End ();
+			GameObject line = Instantiate (currentLineRenderer) as GameObject;
+			LineRenderer ln = line.GetComponent<LineRenderer> ();
+			ln.SetWidth (0.1f, 0.1f);
+			ln.SetPosition (0, new Vector3 (path [i].x, path [i].y - mazeHeight / 2.0f + 1.0f, 0.0f));
+			ln.SetPosition (1, new Vector3 (path [i + 1].x, path [i + 1].y - mazeHeight / 2.0f + 1.0f, 0.0f));
+			line.transform.parent = parent.transform;
 		}
 	}
 }
