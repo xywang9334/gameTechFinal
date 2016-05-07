@@ -322,11 +322,13 @@ public class mazeGenerator : MonoBehaviour {
 
 	private void setStartPosition () {
 		Vector3 position = sphereBall.transform.position;
-		Vector2 p = new Vector2 (position.x, position.y - 1.0f + mazeHeight / 2.0f);
+		Vector3 p = new Vector3 (position.x, position.y - 1.0f + mazeHeight / 2.0f, 0.0f);
+		Vector3 vec = parent.transform.rotation.eulerAngles;
+		p = Quaternion.Inverse(Quaternion.Euler(vec)) * p;
 		List<Vector2> ls = new List<Vector2> (offsets);
 		ls.Insert (0, new Vector2 (0.0f, 0.0f));
 		foreach (var offset in ls) {
-			Vector2 temp = new Vector2 ((int)(p.x + offset.x), (int)(p.y + offset.y));
+			Vector2 temp = new Vector2 (Mathf.RoundToInt(p.x + offset.x), Mathf.RoundToInt(p.y + offset.y));
 			print (temp);
 			if (insideMaze (temp) && maze [(int)temp.x, (int)temp.y] == 0) {
 				start.x = temp.x;
@@ -361,12 +363,37 @@ public class mazeGenerator : MonoBehaviour {
 
 		int length = path.Count;
 		for (int i = 0; i < length - 1; i ++) {
-			GameObject line = Instantiate (currentLineRenderer) as GameObject;
-			LineRenderer ln = line.GetComponent<LineRenderer> ();
-			ln.SetWidth (0.1f, 0.1f);
-			ln.SetPosition (0, new Vector3 (path [i].x, path [i].y - mazeHeight / 2.0f + 1.0f, 0.0f));
-			ln.SetPosition (1, new Vector3 (path [i + 1].x, path [i + 1].y - mazeHeight / 2.0f + 1.0f, 0.0f));
-			line.transform.parent = parent.transform;
+			StartCoroutine(showPath(path, i));
 		}
+	}
+
+	IEnumerator showPath (List<Vector2> path, int i) {
+		GameObject line = Instantiate (currentLineRenderer) as GameObject;
+		LineRenderer ln = line.GetComponent<LineRenderer> ();
+		ln.SetWidth (0.1f, 0.1f);
+		ln.useWorldSpace = false;
+		Vector3 vec = parent.transform.rotation.eulerAngles;
+		Vector3 vec1 = new Vector3 (path [i].x, path [i].y - mazeHeight / 2.0f + 1.0f, 0.0f);
+		vec1 = Quaternion.Euler(vec) * vec1;
+		Vector3 vec2 =  new Vector3 (path [i + 1].x, path [i + 1].y - mazeHeight / 2.0f + 1.0f, 0.0f);
+		vec2 = Quaternion.Euler(vec) * vec2;
+		ln.SetPosition (0, vec1);
+		ln.SetPosition (1, vec2);
+
+		yield return new WaitForSeconds (1f);
+		float duration = 0.5f; //0.5 secs
+		float currentTime = 0f;
+		Color b = Color.black;
+		ln.SetColors(b, b);
+		while(currentTime < duration)
+		{
+			float alpha = Mathf.Lerp(1f, 0f, currentTime/duration);
+			b.a -= alpha;
+			ln.SetColors (b, b);
+			currentTime += Time.deltaTime;
+			yield return null;
+		}
+		line.SetActive (false);
+		Destroy(line);
 	}
 }
