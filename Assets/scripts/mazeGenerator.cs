@@ -322,9 +322,9 @@ public class mazeGenerator : MonoBehaviour {
 
 	private void setStartPosition () {
 		Vector3 position = sphereBall.transform.position;
-		Vector3 p = new Vector3 (position.x, position.y - 1.0f + mazeHeight / 2.0f, 0.0f);
 		Vector3 vec = parent.transform.rotation.eulerAngles;
-		p = Quaternion.Inverse(Quaternion.Euler(vec)) * p;
+		position = Quaternion.Inverse(Quaternion.Euler(vec)) * position;
+		Vector3 p = new Vector3 (position.x, position.y - 1.0f + mazeHeight / 2.0f, 0.0f);
 		List<Vector2> ls = new List<Vector2> (offsets);
 		ls.Insert (0, new Vector2 (0.0f, 0.0f));
 		foreach (var offset in ls) {
@@ -383,13 +383,8 @@ public class mazeGenerator : MonoBehaviour {
 		yield return new WaitForSeconds (1f);
 		float duration = 0.5f; //0.5 secs
 		float currentTime = 0f;
-		Color b = Color.black;
-		ln.SetColors(b, b);
 		while(currentTime < duration)
 		{
-			float alpha = Mathf.Lerp(1f, 0f, currentTime/duration);
-			b.a -= alpha;
-			ln.SetColors (b, b);
 			currentTime += Time.deltaTime;
 			yield return null;
 		}
