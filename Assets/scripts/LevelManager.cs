@@ -50,6 +50,7 @@ public class LevelManager : Singleton<LevelManager> {
 	
 	
 	public void LoadLevel(string name){
+		currentSceneName = SceneManager.GetActiveScene ().name;
 		SceneManager.LoadScene (name);
 		TimeRemaining = maxTime;
 	}
