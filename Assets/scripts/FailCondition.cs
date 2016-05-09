@@ -3,21 +3,19 @@ using System.Collections;
 
 public class FailCondition : MonoBehaviour {
 
+	public Color color;
+	private Material material;
+
 	// Use this for initialization
 	void Start () {
-
+		material = gameObject.GetComponent<Renderer>().material;
+		material.SetColor("_Color", color);
 	}
 
-	// Update is called once per frame
-	void Update () {
-
-	}
-	// TODO:
-	// More UI to add
 	void OnTriggerEnter(Collider collide) {
 		if (collide.CompareTag("ball")) {
 			LevelManager.Instance.isWin = false;
-			LevelManager.Instance.LoadLevel ("win");
+			LevelManager.Instance.LoadLevel ("Lose");
 		}
 	}
 }

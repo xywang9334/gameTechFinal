@@ -13,6 +13,7 @@ public class mazeGenerator : MonoBehaviour {
 	public GameObject mCamera;
 	public GameObject redBrick;
 	public GameObject blueBrick;
+	public GameObject failedCube;
 
 	private Vector3 ballPos;
 	public GameObject parent;
@@ -31,7 +32,7 @@ public class mazeGenerator : MonoBehaviour {
 	public GameObject currentLineRenderer;
 
 	enum state {PASSED, UNPASSED, UNTESTED};
-	enum nextToGenerate {WALL, RED, BLUE};
+	enum nextToGenerate {WALL, RED, BLUE, TRAP};
 
 	struct node {
 		public double pathLengthToNode;
@@ -115,8 +116,8 @@ public class mazeGenerator : MonoBehaviour {
 		Vector3 scale = new Vector3 (1.0f, 1.0f, 1.0f);
 		// maximum number of bricks in the maze
 		int maximumBlackWallNumber = difficulty * 15;
+		int trap = (int)(difficulty / 2);
 		Vector3 position = new Vector3 (mazeWidth, mazeHeight, 0);
-		int count = 0;
 		start = new Vector2(0.0f, 0.0f);
 		for (int i = 0; i < mazeWidth; i++) {
 			for (int j = 0; j < mazeHeight; j++) {
@@ -126,7 +127,7 @@ public class mazeGenerator : MonoBehaviour {
 					if (boundary) {
 						continue;
 					}
-					nextToGenerate n = findNextToGenerate (count, maximumBlackWallNumber);
+					nextToGenerate n = findNextToGenerate (maximumBlackWallNumber, trap);
 					if (n == nextToGenerate.WALL) {
 						GameObject blackWall = Instantiate (wall, pos, Quaternion.identity) as GameObject;
 						blackWall.transform.localScale = scale;
@@ -135,7 +136,12 @@ public class mazeGenerator : MonoBehaviour {
 						GameObject redWall = Instantiate (redBrick, pos, Quaternion.identity) as GameObject;
 						redWall.transform.localScale = scale;
 						redWall.transform.parent = parent.transform;
-					} else {
+					} else if (n == nextToGenerate.TRAP) {
+						GameObject fc = Instantiate (failedCube, pos, Quaternion.identity) as GameObject;
+						fc.transform.localScale = scale;
+						fc.transform.parent = parent.transform;
+					}
+					 else {
 						GameObject blueWall = Instantiate (blueBrick, pos, Quaternion.identity) as GameObject;
 						blueWall.transform.localScale = scale;
 						blueWall.transform.parent = parent.transform;
@@ -178,12 +184,14 @@ public class mazeGenerator : MonoBehaviour {
 	}
 
 
-	nextToGenerate findNextToGenerate(int count, int maximumBlackWallNumber) {
+	nextToGenerate findNextToGenerate(int maximumBlackWallNumber, int trap) {
 		nextToGenerate n;
-		int next = rnd.Next (maximumBlackWallNumber + 10);
-		if (next < maximumBlackWallNumber && count < maximumBlackWallNumber) {
+		int next = rnd.Next (maximumBlackWallNumber + 10 + trap);
+		if (next < maximumBlackWallNumber) {
 			n = nextToGenerate.WALL;
-		} else if (next < maximumBlackWallNumber + 5) {
+		} else if (next < maximumBlackWallNumber + trap) {
+			n = nextToGenerate.TRAP;
+		}else if (next < maximumBlackWallNumber + 5 + trap) {
 			n = nextToGenerate.BLUE;
 		} else {
 			n = nextToGenerate.RED;

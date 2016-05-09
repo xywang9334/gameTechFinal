@@ -15,7 +15,7 @@ public class ParticleController : MonoBehaviour {
 
 
 	// Use this for initialization
-	void Awake () {
+	void Start () {
 		initializeParticleSystem();
 	}
 
@@ -66,7 +66,7 @@ public class ParticleController : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-	void LateUpdate () {
+	void Update () {
 		if (particles == null) {
 			initializeParticleSystem();
 		}

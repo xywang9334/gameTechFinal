@@ -3,9 +3,6 @@ using System.Collections;
 
 public class PlaneController : MonoBehaviour {
 
-	private float TimeToDisappear = 1.0f;
-	private float TimeToAppear = 1.0f;
-//	private bool state = true; // it appears
 	private Material material;
 	private bool hasCollider = true;
 	
@@ -17,7 +14,6 @@ public class PlaneController : MonoBehaviour {
 	void Start () {
 		material = gameObject.GetComponent<Renderer>().material;
 		material.SetColor("_Color", color);
-		StartCoroutine(DisappearAndReappear(TimeToDisappear, TimeToAppear));
 	}
 	
 	// Update is called once per frame
@@ -54,22 +50,5 @@ public class PlaneController : MonoBehaviour {
 	
 	void OnTriggerStay(Collider collide) {
 		changeColor(collide);
-	}
-	
-	private IEnumerator DisappearAndReappear(float TimeToDisappear, float TimeToAppear) {
-		while (true) {
-			yield return StartCoroutine(WaitAndDisappear(TimeToDisappear));		
-			yield return StartCoroutine(WaitAndAppear(TimeToAppear));
-		}
-	}
-	
-	private IEnumerator WaitAndDisappear(float TimeToDisappear) {
-		yield return new WaitForSeconds(TimeToDisappear);
-
-	}
-	
-	private IEnumerator WaitAndAppear(float TimeToAppear) {
-		yield return new WaitForSeconds(TimeToAppear);
-
 	}
 }

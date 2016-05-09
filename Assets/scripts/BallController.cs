@@ -33,12 +33,13 @@ public class BallController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
 		Vector3 position = this.transform.position;
 		position.z = 0.0f;
-		
-		if (Input.GetKey(KeyCode.LeftArrow)) {
-			rb.AddForce(Vector3.left/20, ForceMode.Impulse);
+
+		if (Input.GetKeyDown(KeyCode.LeftArrow)) {
+			rb.AddForce(Vector3.left * 8, ForceMode.Impulse);
+			rb.velocity = Vector3.ClampMagnitude(rb.velocity, 0.1f);
+
 			position.x -= 0.08f;
 			if (arrowUI != null && spaceUI != null && LevelManager.Instance.levelNum == 0 && !arrowUIdone) {
 				arrowUIdone = true;
@@ -47,8 +48,9 @@ public class BallController : MonoBehaviour {
 			}
 		}
 		
-		if (Input.GetKey(KeyCode.RightArrow)) {
-			rb.AddForce(Vector3.right/20, ForceMode.Impulse);
+		if (Input.GetKeyDown(KeyCode.RightArrow)) {
+			rb.AddForce(Vector3.right * 8, ForceMode.Impulse);
+			rb.velocity = Vector3.ClampMagnitude(rb.velocity, 0.1f);
 			position.x += 0.08f;
 			if (arrowUI != null && spaceUI != null && LevelManager.Instance.levelNum == 0 && !arrowUIdone) {
 				arrowUIdone = true;
@@ -96,23 +98,6 @@ public class BallController : MonoBehaviour {
 			}
 		}
 
-	}
-	
-	
-	bool checkLiveness(Vector3 position) {
-		RaycastHit rayHit;
-		float range = 1.0f;
-		Color planeColor = Color.white;
-		Ray ray = new Ray(transform.position, Vector3.down);
-		
-		if (Physics.Raycast(ray, out rayHit, range)) {
-			if (rayHit.collider.tag == "ground") {
-				Renderer renderer = rayHit.transform.gameObject.GetComponent<Renderer>();
-				Material planeMaterial = renderer.material;
-				planeColor = planeMaterial.color;
-			}
-		}
-		return (planeColor == material.color);
 	}
 	
 	void OnTriggerEnter(Collider collide) {
@@ -170,7 +155,6 @@ public class BallController : MonoBehaviour {
 					yield return null;
 				}
 				yield break;
-//				spaceUI.SetActive (false);
 			}
 		}
 	}
