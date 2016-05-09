@@ -329,7 +329,6 @@ public class mazeGenerator : MonoBehaviour {
 		ls.Insert (0, new Vector2 (0.0f, 0.0f));
 		foreach (var offset in ls) {
 			Vector2 temp = new Vector2 (Mathf.RoundToInt(p.x + offset.x), Mathf.RoundToInt(p.y + offset.y));
-			print (temp);
 			if (insideMaze (temp) && maze [(int)temp.x, (int)temp.y] == 0) {
 				start.x = temp.x;
 				start.y = temp.y;
